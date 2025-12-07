@@ -95,7 +95,7 @@ function DishCard({ item, onAddToOrder }: { item: MenuItem; onAddToOrder: (item:
 }
 
 export default function MenuPage() {
-  const [activeCategory, setActiveCategory] = useState<CategoryId>("south-indian")
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("chaat")
   const [cart, setCart] = useState<MenuItem[]>([])
   const [showCart, setShowCart] = useState(false)
 
@@ -172,34 +172,43 @@ export default function MenuPage() {
       {/* Category Tabs */}
       <section className="sticky top-16 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 py-4">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <div
+            className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`relative flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm whitespace-nowrap transition-all duration-300 ${
+                className={`relative flex items-center gap-2 px-4 py-2.5 rounded-full font-medium text-sm whitespace-nowrap transition-all duration-300 ${
                   activeCategory === category.id
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                     : "bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/50"
                 }`}
               >
                 <span className="text-base">{category.icon}</span>
-                {category.label}
-                {activeCategory === category.id && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 bg-primary rounded-full -z-10"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
+                <span className="hidden sm:inline">{category.label}</span>
+                <span className="sm:hidden">{category.label.split(" ")[0]}</span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Item Count Display */}
+      <section className="py-4 px-4">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm text-muted-foreground">
+            Showing <span className="text-primary font-medium">{filteredItems.length}</span> items in{" "}
+            <span className="text-foreground font-medium">
+              {categories.find((c) => c.id === activeCategory)?.label}
+            </span>
+          </p>
+        </div>
+      </section>
+
       {/* Menu Grid */}
-      <section className="py-12 px-4">
+      <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
